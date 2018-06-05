@@ -2,40 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-char* color_names[] = {
-	"black",
-	"red",
-	"green",
-	"yellow",
-	"blue",
-	"magenta",
-	"cyan",
-	"cyan",
-	"white"
-};
-
-char* segment_names[] = {
-	"dir"
-};
-
-typedef enum {
-	SEPARATOR = 0,
-	HOME,
-	UBUNTU,
-	MAX_ICON
-} ICON;
-
-typedef struct {
-	char* text;
-	int foreground;
-	int background;
-} SEGMENT;
-
-char* icons[] = {
-	"\ue0b0", // separator
-	"\uf015", // home
-	"\uf30c"  // ubuntu
-};
+#include "powerlinec.h"
+#include "segments.h"
 
 SEGMENT create_segment(char* description);
 void delete_segment(SEGMENT* segment);
@@ -43,9 +11,7 @@ void draw_segment(SEGMENT* segment);
 int get_color_index(char* color);
 int get_segment_index(char* segment);
 
-SEGMENT segment_dir();
-
-SEGMENT (*available_segments[1])(void);
+SEGMENT (*available_segments[sizeof(segment_names)])(void);
 
 int main(int argc, char* argv[]) {
 	available_segments[0] = segment_dir;
@@ -88,7 +54,9 @@ SEGMENT create_segment(char* description) {
 }
 
 void delete_segment(SEGMENT* segment) {
-	free(segment->text);
+	if (NULL != segment->text)
+		free(segment->text);
+
 	segment->foreground = 0;
 	segment->background = 0;
 }

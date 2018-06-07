@@ -17,18 +17,16 @@ int get_color_index(char* color);
 int get_segment_index(char* segment);
 
 int main(int argc, char* argv[]) {
+	if (1 >= argc) {
+		printf("ERROR: no arguments provided\n");
+		exit(1);
+	}
 
-	// for (int i = 0; i < MAX_ICON; i++) {
-	// 	printf("%s\n", icons[i]);
-	// }
-
-	SEGMENT segment = create_segment("dir:blue:black");
-	draw_segment(&segment);
-	delete_segment(&segment);
-
-	// SEGMENT segment = create_segment("git:yellow:black");
-	// draw_segment(&segment);
-	// delete_segment(&segment);
+	for (int i = 1; i < argc; i++) {
+		SEGMENT current = create_segment(argv[i]);
+		draw_segment(&current);
+		delete_segment(&current);
+	}
 
 	return 0;
 }
@@ -72,8 +70,6 @@ void draw_segment(SEGMENT* segment) {
 	printf("\x1b[%dm", segment->foreground);
 
 	printf(" %s ", segment->text);
-
-	printf("\x1b[0m\n");
 }
 
 int get_color_index(char* color) {

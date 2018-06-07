@@ -1,5 +1,5 @@
 BIN=powerlinec
-OBJS=main.o segment_dir.o
+OBJS=main.o segment_dir.o segment_git.o
 
 CC=gcc
 CFLAGS=

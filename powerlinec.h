@@ -17,6 +17,7 @@ typedef enum {
 	SEPARATOR = 0,
 	HOME,
 	UBUNTU,
+	GIT,
 	MAX_ICON
 } ICON;
 
@@ -29,7 +30,8 @@ typedef struct {
 char* icons[] = {
 	"\ue0b0", // separator
 	"\uf015", // home
-	"\uf30c"  // ubuntu
+	"\uf30c", // ubuntu
+	"\ue0a0"  // git
 };
 
 

@@ -2,9 +2,11 @@
 #define SEGMENTS_H
 
 char* segment_names[] = {
-	"dir"
+	"dir",
+	"git"
 };
 
 SEGMENT segment_dir();
+SEGMENT segment_git();
 
 #endif

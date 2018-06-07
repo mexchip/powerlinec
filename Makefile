@@ -9,4 +9,4 @@ ${BIN}: ${OBJS}
 	${CC} -o $@ $^ ${LIBS}
 
 clean:
-	rm -f {$BIN} ${OBJS}
+	rm -f ${BIN} ${OBJS}

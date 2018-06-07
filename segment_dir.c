@@ -5,7 +5,7 @@
 #include "segment_dir.h"
 
 SEGMENT segment_dir() {
-	SEGMENT segment;
+	SEGMENT segment = {.text = NULL, .background = 0, .foreground = 0};
 	char* pwd = getenv("PWD");
 	char* home = getenv("HOME");
 

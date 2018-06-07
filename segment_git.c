@@ -6,7 +6,7 @@
 #include "segment_git.h"
 
 SEGMENT segment_git() {
-	SEGMENT	 segment;
+	SEGMENT	segment = {.text = NULL, .background = 0, .foreground = 0};
 
 	int error = 0;
 	git_libgit2_init();

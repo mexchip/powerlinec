@@ -24,19 +24,26 @@ int main(int argc, char* argv[]) {
 	}
 
 	SEGMENT old;
+	int drawn = 0;
 	for (int i = 1; i < argc; i++) {
 		SEGMENT current = create_segment(argv[i]);
-		if (i > 1) {
-			draw_separator(current.background, old.background - 10);
+		if (NULL != current.text) {
+			if (i > 1) {
+				draw_separator(current.background, old.background - 10);
+			}
+			draw_segment(&current);
+			drawn++;
+			old.foreground = current.foreground;
+			old.background = current.background;
 		}
-		draw_segment(&current);
-		if (i == argc - 1) {
-			draw_separator(0, current.background - 10);
-		}
-		old.foreground = current.foreground;
-		old.background = current.background;
 		delete_segment(&current);
 	}
+
+	if (0 < drawn) {
+		draw_separator(0, old.background - 10);
+	}
+
+	printf("\x1b[0m");
 
 	return 0;
 }

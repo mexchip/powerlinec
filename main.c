@@ -4,8 +4,11 @@
 
 #include <git2.h>
 
+#define DEFINE_GLOBALS
 #include "powerlinec.h"
 #include "segments.h"
+
+const size_t color_names_size = sizeof(color_names);
 
 SEGMENT create_segment(char* description);
 void delete_segment(SEGMENT* segment);
@@ -13,11 +16,7 @@ void draw_segment(SEGMENT* segment);
 int get_color_index(char* color);
 int get_segment_index(char* segment);
 
-SEGMENT (*available_segments[sizeof(segment_names)])(void);
-
 int main(int argc, char* argv[]) {
-	available_segments[0] = segment_dir;
-	available_segments[1] = segment_git;
 
 	// for (int i = 0; i < MAX_ICON; i++) {
 	// 	printf("%s\n", icons[i]);
@@ -95,24 +94,6 @@ int get_segment_index(char* segment) {
 	}
 
 	return -1;
-}
-
-SEGMENT segment_dir() {
-	SEGMENT segment;
-	char* pwd = getenv("PWD");
-	char* home = getenv("HOME");
-
-	segment.text = (char*)malloc(strlen(pwd));
-	memset(segment.text, 0, strlen(pwd));
-
-	if (strncmp(pwd, home, strlen(home)) == 0) {
-		sprintf(segment.text, "%s%s", icons[HOME], pwd + strlen(home));
-	}
-	else {
-		sprintf(segment.text, "%s", pwd);
-	}
-
-	return segment;
 }
 
 SEGMENT segment_git() {

@@ -1,17 +1,7 @@
 #ifndef POWERLINEC_H
 #define POWERLINEC_H
 
-char* color_names[] = {
-	"black",
-	"red",
-	"green",
-	"yellow",
-	"blue",
-	"magenta",
-	"cyan",
-	"cyan",
-	"white"
-};
+#include <stddef.h>
 
 typedef enum {
 	SEPARATOR = 0,
@@ -27,6 +17,22 @@ typedef struct {
 	int background;
 } SEGMENT;
 
+extern char* color_names[];
+extern char* icons[];
+
+#ifdef DEFINE_GLOBALS
+char* color_names[] = {
+	"black",
+	"red",
+	"green",
+	"yellow",
+	"blue",
+	"magenta",
+	"cyan",
+	"cyan",
+	"white"
+};
+
 char* icons[] = {
 	"\ue0b0", // separator
 	"\uf015", // home
@@ -34,5 +40,6 @@ char* icons[] = {
 	"\ue0a0"  // git
 };
 
+#endif
 
 #endif

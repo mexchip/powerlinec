@@ -15,6 +15,7 @@ void delete_segment(SEGMENT* segment);
 void draw_segment(SEGMENT* segment);
 int get_color_index(char* color);
 int get_segment_index(char* segment);
+void draw_separator(int background, int foreground);
 
 int main(int argc, char* argv[]) {
 	if (1 >= argc) {
@@ -22,9 +23,18 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
+	SEGMENT old;
 	for (int i = 1; i < argc; i++) {
 		SEGMENT current = create_segment(argv[i]);
+		if (i > 1) {
+			draw_separator(current.background, old.background - 10);
+		}
 		draw_segment(&current);
+		if (i == argc - 1) {
+			draw_separator(0, current.background - 10);
+		}
+		old.foreground = current.foreground;
+		old.background = current.background;
 		delete_segment(&current);
 	}
 
@@ -90,4 +100,14 @@ int get_segment_index(char* segment) {
 	}
 
 	return -1;
+}
+
+void draw_separator(int background, int foreground) {
+	printf("\x1b[%dm", background);
+	printf("\x1b[%dm", foreground);
+
+	printf("%s", icons[SEPARATOR]);
+
+	printf("\x1b[0m");
+
 }

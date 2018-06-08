@@ -10,7 +10,7 @@ char* segment_names[] = {
 };
 
 #ifdef DEFINE_GLOBALS
-SEGMENT (*available_segments[sizeof(segment_names)])(void) = {
+int (*available_segments[sizeof(segment_names)])(SEGMENT*) = {
 	segment_dir,
 	segment_git
 };

@@ -56,25 +56,26 @@ int main(int argc, char* argv[]) {
 SEGMENT create_segment(char* description) {
 	char* copy = strdup(description);
 
-	int segment_index;
+	int segment_index = -1, background, foreground;
 
 	char* token;
 
 	token = strtok(copy, ":");
-	segment_index = get_segment_index(token);
-	SEGMENT segment = (*available_segments[segment_index])();
+	if (NULL != token)
+		segment_index = get_segment_index(token);
 
 	token = strtok(NULL, ":");
 	if (NULL != token)
-		segment.background = 40 + get_color_index(token);
-	else
-		segment.background = -1;
+		background = get_color_index(token) + 40;
 
 	token = strtok(NULL, ":");
 	if (NULL != token)
-		segment.foreground = 30 + get_color_index(token);
-	else
-		segment.foreground = -1;
+		foreground = get_color_index(token) + 30;
+
+	SEGMENT segment = {.text = NULL, .background = background, .foreground = foreground};
+	if (segment_index >= 0) {
+		int res = (*available_segments[segment_index])(&segment);
+	}
 
 	return segment;
 }

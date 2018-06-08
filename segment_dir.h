@@ -3,6 +3,6 @@
 
 #include "powerlinec.h"
 
-SEGMENT segment_dir();
+int segment_dir(SEGMENT* segment);
 
 #endif

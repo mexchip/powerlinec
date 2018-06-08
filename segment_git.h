@@ -3,6 +3,6 @@
 
 #include "powerlinec.h"
 
-SEGMENT segment_git();
+int segment_git(SEGMENT* segment);
 
 #endif

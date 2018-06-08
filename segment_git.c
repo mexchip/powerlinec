@@ -5,9 +5,7 @@
 
 #include "segment_git.h"
 
-SEGMENT segment_git() {
-	SEGMENT	segment = {.text = NULL, .background = 0, .foreground = 0};
-
+int segment_git(SEGMENT* segment) {
 	int error = 0;
 	git_libgit2_init();
 	git_repository* repo = NULL;
@@ -20,9 +18,9 @@ SEGMENT segment_git() {
 		if (0 == error) {
 			branch = git_reference_shorthand(head);
 			int length = strlen(branch) + strlen(icons[GIT]) + 3;
-			segment.text = (char*)malloc(length);
-			memset(segment.text, 0, length);
-			sprintf(segment.text, "%s %s", icons[GIT], branch);
+			segment->text = (char*)malloc(length);
+			memset(segment->text, 0, length);
+			sprintf(segment->text, "%s %s", icons[GIT], branch);
 			
 			git_reference_free(head);
 		}
@@ -32,5 +30,5 @@ SEGMENT segment_git() {
 
 	git_libgit2_shutdown();
 
-	return segment;
+	return 0;
 }

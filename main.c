@@ -25,16 +25,21 @@ int main(int argc, char* argv[]) {
 
 	SEGMENT old;
 	int drawn = 0;
+	int flag = 0;
 	for (int i = 1; i < argc; i++) {
 		SEGMENT current = create_segment(argv[i]);
 		if (NULL != current.text) {
-			if (i > 1) {
+			if (flag >= 1) {
 				draw_separator(current.background, old.background - 10);
 			}
 			draw_segment(&current);
 			drawn++;
 			old.foreground = current.foreground;
 			old.background = current.background;
+			flag = 1;
+		}
+		else {
+			flag = 0;
 		}
 		delete_segment(&current);
 	}

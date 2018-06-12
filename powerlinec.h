@@ -8,6 +8,11 @@ typedef enum {
 	HOME,
 	UBUNTU,
 	GIT,
+	MODIFIED,
+	STAGED,
+	AHEAD,
+	BEHIND,
+	STASH,
 	MAX_ICON
 } ICON;
 
@@ -37,7 +42,12 @@ char* icons[] = {
 	"\ue0b0", // separator
 	"\uf015", // home
 	"\uf30c", // ubuntu
-	"\ue0a0"  // git
+	"\ue0a0", // git
+	"\uf111", // modified
+	"\uf067", // staged
+	"\uf148", // ahead
+	"\uf149", // behind
+	"\uf01c", // stash
 };
 
 #endif

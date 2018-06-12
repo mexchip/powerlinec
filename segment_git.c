@@ -28,9 +28,21 @@ int segment_git(SEGMENT* segment) {
 
 	if (0 == res) {
 		int length = strlen(status.branch_name) + strlen(icons[GIT]) + 3;
+		if (status.modified)
+			length += strlen(icons[MODIFIED]);
+		if (status.staged)
+			length += strlen(icons[STAGED]);
+		
 		segment->text = (char*)malloc(length);
 		memset(segment->text, 0, length);
-		sprintf(segment->text, "%s %s", icons[GIT], status.branch_name);
+		sprintf(
+			segment->text, "%s %s%s%s%s",
+			icons[GIT],
+			status.branch_name,
+			(status.modified || status.staged)? " " : "",
+			status.modified ? icons[MODIFIED] : "",
+			status.staged ? icons[STAGED] : ""
+		);
 
 		if (status.dirty > 0) {
 			segment->background++;
@@ -62,6 +74,34 @@ static int get_git_status(GIT_STATUS* git_status) {
 				size_t changes = git_status_list_entrycount(status);
 				if (changes > 0) {
 					git_status->dirty = 1;
+				}
+
+				const git_status_entry* s;
+				for (size_t i = 0; i < changes; i++) {
+					s = git_status_byindex(status, i);
+
+					if (s->status == GIT_STATUS_CURRENT)
+						continue;
+
+					if (
+						s->status & GIT_STATUS_WT_NEW
+						|| s->status & GIT_STATUS_WT_MODIFIED
+						|| s->status & GIT_STATUS_WT_DELETED
+						|| s->status & GIT_STATUS_WT_RENAMED
+						|| s->status & GIT_STATUS_WT_TYPECHANGE
+					) {
+						git_status->modified = 1;
+					}
+
+					if (
+						s->status & GIT_STATUS_INDEX_NEW
+						|| s->status & GIT_STATUS_INDEX_MODIFIED
+						|| s->status & GIT_STATUS_INDEX_DELETED
+						|| s->status & GIT_STATUS_INDEX_RENAMED
+						|| s->status & GIT_STATUS_INDEX_TYPECHANGE
+					) {
+						git_status->staged = 1;
+					}
 				}
 			}
 		

@@ -19,7 +19,7 @@ void draw_separator(int background, int foreground);
 
 int main(int argc, char* argv[]) {
 	if (1 >= argc) {
-		printf("ERROR: no arguments provided\n");
+		printf("ERROR: no arguments provided.\n");
 		exit(1);
 	}
 
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 		draw_separator(0, old.background - 10);
 	}
 
-	printf("\x1b[0m");
+	printf("\x1b[0m ");
 
 	return 0;
 }

@@ -34,7 +34,6 @@ char* color_names[] = {
 	"blue",
 	"magenta",
 	"cyan",
-	"cyan",
 	"white"
 };
 

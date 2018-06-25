@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 		draw_separator(0, old.background - 10);
 	}
 
-	printf("\x1b[0m ");
+	printf("\\[\x1b[0m\\] ");
 
 	return 0;
 }
@@ -89,8 +89,8 @@ void delete_segment(SEGMENT* segment) {
 }
 
 void draw_segment(SEGMENT* segment) {
-	printf("\x1b[%dm", segment->background);
-	printf("\x1b[%dm", segment->foreground);
+	printf("\\[\x1b[%dm\\]", segment->background);
+	printf("\\[\x1b[%dm\\]", segment->foreground);
 
 	printf(" %s ", segment->text);
 }
@@ -116,11 +116,8 @@ int get_segment_index(char* segment) {
 }
 
 void draw_separator(int background, int foreground) {
-	printf("\x1b[%dm", background);
-	printf("\x1b[%dm", foreground);
+	printf("\\[\x1b[%dm\\]", background);
+	printf("\\[\x1b[%dm\\]", foreground);
 
 	printf("%s", icons[SEPARATOR]);
-
-	printf("\x1b[0m");
-
 }

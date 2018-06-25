@@ -29,7 +29,7 @@ int segment_git(SEGMENT* segment) {
 
 	int res = get_git_status(&status);
 
-	if (0 == res) {
+	if (0 == res && NULL != status.branch_name) {
 		int length = strlen(status.branch_name) + strlen(icons[GIT]) + 3;
 		if (status.modified)
 			length += strlen(icons[MODIFIED]);
@@ -87,11 +87,9 @@ static int get_git_status(GIT_STATUS* git_status) {
 			if (0 == error) {
 				const char* fetch = git_remote_url(remote);
 				if (fetch) {
-					// printf("Fetch %s\n", fetch);
 					git_reference* upstream;
 					error = git_branch_upstream(&upstream, head);
 					if (0 == error) {
-						// printf("no error upstream\n");
 						size_t ahead, behind;
 						git_commit* branch_commit = branch_to_commit(repo, head);
 						git_commit* upstream_commit = branch_to_commit(repo, upstream);;
@@ -100,12 +98,8 @@ static int get_git_status(GIT_STATUS* git_status) {
 						local_oid = git_commit_id(branch_commit);
 						upstream_oid = git_commit_id(upstream_commit);
 						git_graph_ahead_behind(&ahead, &behind, repo, local_oid, upstream_oid);
-						// printf("ahead: %lu, behind: %lu\n", ahead, behind);
 						git_status->ahead = ahead;
 						git_status->behind = behind;
-					}
-					else {
-						// printf("error upstream\n");
 					}
 				}
 			}

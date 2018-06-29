@@ -43,8 +43,14 @@ int segment_git(SEGMENT* segment) {
 		memset(segment->text, 0, length);
 
 		strcpy(segment->text, icons[GIT]);
+		if (0 < status.ahead) {
+			strcat(segment->text, " ");
+		}
 		for (int i = 0; i < status.ahead; i++) {
 			strcat(segment->text, icons[AHEAD]);
+		}
+		if (0 < status.behind) {
+			strcat(segment->text, " ");
 		}
 		for (int i = 0; i < status.behind; i++) {
 			strcat(segment->text, icons[BEHIND]);

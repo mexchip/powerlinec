@@ -83,7 +83,7 @@ static int get_git_status(GIT_STATUS* git_status) {
 	git_repository* repo = NULL;
 	
 	int error = 0;
-	error = git_repository_open(&repo, "./");
+	error = git_repository_open_ext(&repo, "./", 0, NULL);
 	if (0 == error) {
 		git_reference* head = NULL;
 		error = git_repository_head(&head, repo);

@@ -17,9 +17,9 @@ typedef enum {
 } ICON;
 
 typedef struct {
-	char* text;
 	int foreground;
 	int background;
+	char* text;
 } SEGMENT;
 
 extern char* color_names[];

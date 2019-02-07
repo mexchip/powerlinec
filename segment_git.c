@@ -5,6 +5,9 @@
 
 #include "segment_git.h"
 
+#define MAX_AHEAD 5
+#define MAX_BEHIND 5
+
 typedef struct {
 	char* branch_name;
 	uint8_t dirty;
@@ -36,24 +39,61 @@ int segment_git(SEGMENT* segment) {
 		if (status.staged)
 			length += strlen(icons[STAGED]);
 
-		length += status.ahead * strlen(icons[AHEAD]);
-		length += status.behind * strlen(icons[BEHIND]);
-		
+		if (status.ahead > MAX_AHEAD) {
+			int digit_count = 0;
+			uint8_t temp = status.ahead;
+			while (temp != 0) {
+				temp /= 10;
+				++digit_count;
+			}
+			length += digit_count + strlen(icons[AHEAD]); // ahead digits + icon
+		} else {
+			length += status.ahead * strlen(icons[AHEAD]);
+		}
+
+		if (status.behind > MAX_BEHIND) {
+			int digit_count = 0;
+			uint8_t temp = status.behind;
+			while (temp != 0) {
+				temp /= 10;
+				++digit_count;
+			}
+			length += digit_count + strlen(icons[BEHIND]); // behind digits + icon
+		} else {
+			length += status.behind * strlen(icons[BEHIND]);
+		}
+
 		segment->text = (char*)malloc(length);
 		memset(segment->text, 0, length);
 
 		strcpy(segment->text, icons[GIT]);
+
 		if (0 < status.ahead) {
 			strcat(segment->text, " ");
 		}
-		for (int i = 0; i < status.ahead; i++) {
-			strcat(segment->text, icons[AHEAD]);
+
+		if (status.ahead > MAX_AHEAD) {
+			char buffer[10];
+			sprintf(buffer, "%s%d", icons[AHEAD], status.ahead);
+			strcat(segment->text, buffer);
+		} else {
+			for (int i = 0; i < status.ahead; i++) {
+				strcat(segment->text, icons[AHEAD]);
+			}
 		}
+
 		if (0 < status.behind) {
 			strcat(segment->text, " ");
 		}
-		for (int i = 0; i < status.behind; i++) {
-			strcat(segment->text, icons[BEHIND]);
+
+		if (status.behind > MAX_BEHIND) {
+			char buffer[10];
+			sprintf(buffer, "%s%d", icons[BEHIND], status.behind);
+			strcat(segment->text, buffer);
+		} else {
+			for (int i = 0; i < status.behind; i++) {
+				strcat(segment->text, icons[BEHIND]);
+			}
 		}
 
 		strcat(segment->text, " ");

@@ -13,6 +13,9 @@ typedef enum {
 	AHEAD,
 	BEHIND,
 	STASH,
+	GITHUB,
+	GITLAB,
+	BITBUCKET,
 	MAX_ICON
 } ICON;
 
@@ -47,6 +50,9 @@ char* icons[] = {
 	"\uf148", // ahead
 	"\uf149", // behind
 	"\uf01c", // stash
+	"\uf09b", // github
+	"\uf296", // gitlab
+	"\uf171", // bitbucket
 };
 
 #endif

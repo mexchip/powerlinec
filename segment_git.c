@@ -15,10 +15,27 @@ typedef struct {
 	uint8_t staged;
 	uint8_t ahead;
 	uint8_t behind;
+	char* git_server_icon;
 } GIT_STATUS;
 
 static int get_git_status(GIT_STATUS* git_status);
 static git_commit* branch_to_commit(git_repository* repo, git_reference* branch);
+static void set_server_icon(GIT_STATUS* git_status, const char* origin_url);
+
+static char* GIT_SERVERS_URLS[] = {
+	"github.com",
+	"gitlab.com",
+	"bitbucket.com"
+};
+
+typedef enum {
+	GIT_SERVER_GITHUB,
+	GIT_SERVER_GITLAB,
+	GIT_SERVER_BITBUCKET,
+	MAX_GIT_SERVER
+} GIT_SERVERS;
+
+static size_t GIT_SERVERS_ICONS_INDICES[] = {9, 10, 11};
 
 int segment_git(SEGMENT* segment) {
 	int error = 0;
@@ -27,13 +44,16 @@ int segment_git(SEGMENT* segment) {
 		.branch_name = NULL,
 		.dirty = 0,
 		.modified = 0,
-		.staged = 0
+		.staged = 0,
+		.ahead = 0,
+		.behind = 0,
+		.git_server_icon = NULL,
 	};
 
 	int res = get_git_status(&status);
 
 	if (0 == res && NULL != status.branch_name) {
-		int length = strlen(status.branch_name) + strlen(icons[GIT]) + 3;
+		int length = strlen(status.branch_name) + strlen(status.git_server_icon) + 3;
 		if (status.modified)
 			length += strlen(icons[MODIFIED]);
 		if (status.staged)
@@ -66,7 +86,7 @@ int segment_git(SEGMENT* segment) {
 		segment->text = (char*)malloc(length);
 		memset(segment->text, 0, length);
 
-		strcpy(segment->text, icons[GIT]);
+		strcpy(segment->text, status.git_server_icon);
 
 		if (0 < status.ahead) {
 			strcat(segment->text, " ");
@@ -147,6 +167,8 @@ static int get_git_status(GIT_STATUS* git_status) {
 						git_status->ahead = ahead;
 						git_status->behind = behind;
 					}
+
+					set_server_icon(git_status, fetch);
 				}
 			}
 			git_status->branch_name = strdup(git_reference_shorthand(head));
@@ -203,7 +225,7 @@ static int get_git_status(GIT_STATUS* git_status) {
 	return -1;
 }
 
-git_commit* branch_to_commit(git_repository* repo, git_reference* branch) {
+static git_commit* branch_to_commit(git_repository* repo, git_reference* branch) {
 	int error = 0;
 
 	git_object* commit_obj;
@@ -226,4 +248,20 @@ git_commit* branch_to_commit(git_repository* repo, git_reference* branch) {
 
 	// printf("returning NULL\n");
 	return NULL;
+}
+
+static void set_server_icon(GIT_STATUS* git_status, const char* origin_url) {
+	for (int i = 0; i < MAX_GIT_SERVER; i++) {
+		if (NULL != strstr(origin_url, GIT_SERVERS_URLS[i])) {
+			git_status->git_server_icon = (char*)malloc(strlen(icons[GIT_SERVERS_ICONS_INDICES[i]]));
+			memset(git_status->git_server_icon, 0, strlen(icons[GIT_SERVERS_ICONS_INDICES[i]]));
+			sprintf(git_status->git_server_icon, "%s", icons[GIT_SERVERS_ICONS_INDICES[i]]);
+			return;
+		}
+	}
+
+	// no server found
+	git_status->git_server_icon = (char*)malloc(strlen(icons[GIT]));
+	memset(git_status->git_server_icon, 0, strlen(icons[GIT]));
+	sprintf(git_status->git_server_icon, "%s", icons[GIT]);
 }

@@ -10,11 +10,11 @@
 
 typedef struct {
 	char* branch_name;
-	uint8_t dirty;
-	uint8_t modified;
+	uint16_t dirty;
+	uint16_t modified;
 	uint8_t staged;
-	uint8_t ahead;
-	uint8_t behind;
+	uint16_t ahead;
+	uint16_t behind;
 	char* git_server_icon;
 } GIT_STATUS;
 
@@ -53,7 +53,11 @@ int segment_git(SEGMENT* segment) {
 	int res = get_git_status(&status);
 
 	if (0 == res && NULL != status.branch_name) {
-		int length = strlen(status.branch_name) + strlen(status.git_server_icon) + 3;
+		int length = strlen(status.branch_name) + 2;
+		if (NULL != status.git_server_icon) {
+			length += strlen(status.git_server_icon) + 1;
+		}
+
 		if (status.modified)
 			length += strlen(icons[MODIFIED]);
 		if (status.staged)
@@ -86,7 +90,9 @@ int segment_git(SEGMENT* segment) {
 		segment->text = (char*)malloc(length);
 		memset(segment->text, 0, length);
 
-		strcpy(segment->text, status.git_server_icon);
+		if (NULL != status.git_server_icon) {
+			strcpy(segment->text, status.git_server_icon);
+		}
 
 		if (0 < status.ahead) {
 			strcat(segment->text, " ");
@@ -116,7 +122,10 @@ int segment_git(SEGMENT* segment) {
 			}
 		}
 
-		strcat(segment->text, " ");
+		if (NULL != status.git_server_icon) {
+			strcat(segment->text, " ");
+		}
+
 		strcat(segment->text, status.branch_name);
 
 		if (status.modified || status.staged)

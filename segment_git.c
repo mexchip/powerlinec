@@ -7,12 +7,14 @@
 
 #define MAX_AHEAD 5
 #define MAX_BEHIND 5
+#define MAX_STASH 5
 
 typedef struct {
 	char* branch_name;
 	uint16_t dirty;
 	uint16_t modified;
 	uint8_t staged;
+	uint16_t stash;
 	uint16_t ahead;
 	uint16_t behind;
 	char* git_server_icon;
@@ -21,6 +23,7 @@ typedef struct {
 static int get_git_status(GIT_STATUS* git_status);
 static git_commit* branch_to_commit(git_repository* repo, git_reference* branch);
 static void set_server_icon(GIT_STATUS* git_status, const char* origin_url);
+static int stash_counter(size_t index, const char* message, const git_oid* stash_id, void* payload);
 
 static char* GIT_SERVERS_URLS[] = {
 	"github.com",
@@ -45,6 +48,7 @@ int segment_git(SEGMENT* segment) {
 		.dirty = 0,
 		.modified = 0,
 		.staged = 0,
+		.stash = 0,
 		.ahead = 0,
 		.behind = 0,
 		.git_server_icon = NULL,
@@ -62,6 +66,18 @@ int segment_git(SEGMENT* segment) {
 			length += strlen(icons[MODIFIED]);
 		if (status.staged)
 			length += strlen(icons[STAGED]);
+
+		if (status.stash > MAX_STASH) {
+			int digit_count = 0;
+			uint8_t temp = status.stash;
+			while (temp != 0) {
+				temp /= 10;
+				++digit_count;
+			}
+			length += digit_count + strlen(icons[STASH]); // stash digits + icon
+		} else {
+			length += status.stash * strlen(icons[STASH]);
+		}
 
 		if (status.ahead > MAX_AHEAD) {
 			int digit_count = 0;
@@ -92,6 +108,20 @@ int segment_git(SEGMENT* segment) {
 
 		if (NULL != status.git_server_icon) {
 			strcpy(segment->text, status.git_server_icon);
+		}
+
+		if (0 < status.stash) {
+			strcat(segment->text, " ");
+		}
+
+		if (status.stash > MAX_STASH) {
+			char buffer[10];
+			sprintf(buffer, "%s%d", icons[STASH], status.stash);
+			strcat(segment->text, buffer);
+		} else {
+			for (int i = 0; i < status.stash; i++) {
+				strcat(segment->text, icons[STASH]);
+			}
 		}
 
 		if (0 < status.ahead) {
@@ -224,6 +254,7 @@ static int get_git_status(GIT_STATUS* git_status) {
 			git_reference_free(head);
 		}
 
+		git_stash_foreach(repo, stash_counter, &git_status->stash);
 		git_repository_free(repo);
 
 		return 0;
@@ -273,4 +304,10 @@ static void set_server_icon(GIT_STATUS* git_status, const char* origin_url) {
 	git_status->git_server_icon = (char*)malloc(strlen(icons[GIT]));
 	memset(git_status->git_server_icon, 0, strlen(icons[GIT]));
 	sprintf(git_status->git_server_icon, "%s", icons[GIT]);
+}
+
+static int stash_counter(size_t index, const char* message, const git_oid* stash_id, void* payload) {
+    (*(uint16_t*)payload)++;
+
+    return 0;
 }

@@ -256,6 +256,7 @@ static int get_git_status(GIT_STATUS* git_status) {
 
 		git_stash_foreach(repo, stash_counter, &git_status->stash);
 		git_repository_free(repo);
+		git_libgit2_shutdown();
 
 		return 0;
 	}

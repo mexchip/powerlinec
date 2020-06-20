@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <git2.h>
+#define VERSION "0.2"
 
 #define DEFINE_GLOBALS
 #include "powerlinec.h"
@@ -21,6 +21,11 @@ int main(int argc, char* argv[]) {
 	if (1 >= argc) {
 		printf("ERROR: no arguments provided.\n");
 		exit(1);
+	}
+
+	if (0 == strcmp("--version", argv[1])) {
+		printf("powerlinec %s\n", VERSION);
+		exit(0);
 	}
 
 	SEGMENT old;

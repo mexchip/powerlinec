@@ -1,9 +1,8 @@
 BIN=powerlinec
 OBJS=main.o segment_dir.o segment_git.o segment_virtualenv.o
 
-CC=gcc
-CFLAGS=
-LIBS=-lgit2
+CFLAGS=-I~/libgit2/include/
+LIBS=~/libgit2/build/libgit2.a
 
 ${BIN}: ${OBJS}
 	${CC} -o $@ $^ ${LIBS}

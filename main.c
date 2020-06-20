@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define VERSION "0.2"
+#define VERSION "0.3"
 
 #define DEFINE_GLOBALS
 #include "powerlinec.h"

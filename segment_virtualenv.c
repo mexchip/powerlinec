@@ -8,9 +8,10 @@ int segment_virtualenv(SEGMENT* segment) {
     char* virtualenv = getenv("VIRTUAL_ENV");
 
     if (NULL != virtualenv) {
-        int index = strlen(virtualenv - 1);
+        // use the lowest level directory for text segment
+        size_t index = strlen(virtualenv) - 1;
         for (; index >= 0 && virtualenv[index] != '/'; index--);
-        int length = strlen(virtualenv + index + 1);
+        size_t length = strlen(virtualenv) - index + 1;
         segment->text = (char*)malloc(length);
         memset(segment->text, 0, length);
 

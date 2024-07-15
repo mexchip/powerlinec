@@ -51,9 +51,8 @@ int main(int argc, char* argv[]) {
 
 	if (0 < drawn) {
 		draw_separator(0, old.background - 10);
+		printf("\\[\x1b[0m\\] ");
 	}
-
-	printf("\\[\x1b[0m\\] ");
 
 	return 0;
 }
@@ -101,7 +100,9 @@ void draw_segment(SEGMENT* segment) {
 }
 
 int get_color_index(char* color) {
-	for (int i = 0; i < sizeof(color_names); i++) {
+	size_t size = sizeof(color_names) / sizeof(*color_names);
+
+	for (int i = 0; i < size; i++) {
 		if (strcmp(color, color_names[i]) == 0) {
 			return i;
 		}
@@ -111,7 +112,9 @@ int get_color_index(char* color) {
 }
 
 int get_segment_index(char* segment) {
-	for (int i = 0; i < sizeof(segment_names); i++) {
+	size_t size = sizeof(segment_names) / sizeof(*segment_names);
+
+	for (int i = 0; i < size; i++) {
 		if (strcmp(segment, segment_names[i]) == 0) {
 			return i;
 		}

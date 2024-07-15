@@ -28,21 +28,24 @@ Having to compile libgit2 when installing `bronze` (see [how to install bronze p
 By default, libgit2 is compiled as a shared library, but it is ready to be compiled statically by setting the BUILD_SHARED_LIBS setting to OFF when invoking cmake. But linking this static libgit2 library is not enough to have a fully self contained executable, as libgit2 requires some additional shared libraries. In order to have a fully contained executable we'd need to link with the static versions of these other libraries or, as we do in the following commands, disable this additional functionality since we don't need it in powerlinec.
 
 The libgit2 library is downloaded to $HOME/libgit2 where powerlinec tries to use it from. This way you don't install the compiled libgit2 to your system directories and can delete it whenever you like without affecting your system. Note that as we disable several libgit2 features, the compiled libgit2 is not useful beyond reading information from local repositories.
+
+The following commands will clone the libgit2 repository to $HOME/libgit2, configure CMake to disable some libgit2 features and compile it statically:
 ```
-$ cd
-$ git clone https://github.com/libgit2/libgit2.git
-$ cd libgit2
-$ mkdir build
-$ cd build
-$ cmake .. -DBUILD_CLAR=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPCRE_INCLUDE_DIR=OFF -DTHREADSAFE=OFF -DUSE_BUNDLED_ZLIB=ON -DUSE_GSSAPI=OFF -DUSE_HTTPS=OFF -DUSE_HTTP_PARSER=OFF -DUSE_SSH=OFF
-$ cmake --build .
+cd
+git clone https://github.com/libgit2/libgit2.git
+cd libgit2
+mkdir build
+cd build
+cmake .. -DBUILD_CLAR=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPCRE_INCLUDE_DIR=OFF -DTHREADSAFE=OFF -DUSE_BUNDLED_ZLIB=ON -DUSE_GSSAPI=OFF -DUSE_HTTPS=OFF -DUSE_HTTP_PARSER=OFF -DUSE_SSH=OFF
+cmake --build .
 ```
 #### Compile powerlinec
+After compiling libgit2, enter the following commands into a terminal:
 ```
-$ cd
-$ git clone https://github.com/mexchip/powerlinec.git
-$ cd powerlinec
-$ make
+cd
+git clone https://github.com/mexchip/powerlinec.git
+cd powerlinec
+make
 ```
 Now follow the [Installation and configuration](#Installation-and-configuration) instructions.
 
